@@ -1,0 +1,19 @@
+<GuiXml>
+    <Controls>
+        <TopLevelControl name="DisarmIndicator" mouseEnabled="true" movable="true" clampedToScreen="true" hidden="true"> 
+            <Dimensions x="200" y="25" />
+            <Anchor point="BOTTOM" relativeTo="GuiRoot" relativePoint="CENTER" offsetY="-20" />
+
+            <!-- Used for updating saved variables related to indicator position -->
+            <OnMoveStop>
+                Disarm.OnIndicatorMoveStop()
+            </OnMoveStop>
+            
+            <Controls>
+                <Label name="$(parent)Label" width="200" height="25" font="ZoFontWinH1" inheritAlpha="true" color="FF0000" wrapmode="TRUNCATE" verticalAlignment="TOP" horizontalAlignment="CENTER" text="No Weapons!">
+                    <Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP" />
+                </Label>
+            </Controls>
+        </TopLevelControl>
+    </Controls>
+</GuiXml>

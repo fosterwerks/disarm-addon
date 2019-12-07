@@ -1,0 +1,9 @@
+<Bindings>
+	<Layer name="SI_KEYBINDINGS_LAYER_GENERAL">
+		<Category name="Demilitarized Fishing">
+			<Action name="SWAP_WEAPONS_STATE">
+				<Down>Disarm:SwapWeaponsState()</Down>
+			</Action>
+		</Category>
+	</Layer>
+</Bindings>
