@@ -90,7 +90,7 @@ function Disarm:UnequipWeapons()
     end
 
     zo_callLater(function() 
-        --DisarmIndicator:SetHidden(false)        -- Makes indicator appear only after last weapon is unequipped
+        DisarmIndicator:SetHidden(false)        -- Makes indicator appear only after last weapon is unequipped
         self.unequipped = true                  -- Ensures we don't interfere with InvSlotUpdate event handler
     end, t)
 end
