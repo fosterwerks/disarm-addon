@@ -5,9 +5,13 @@ Disarm = {}
 Disarm.name = "Disarm"
 Disarm.version = 3
 Disarm.Default = {
-    Indicator.visible = true,
-    Indicator.Position.X = 25,
-    Indicator.Position.Y = 25
+    Indicator = {
+        visible = true,
+        Position = {
+            X = 25,
+            Y = 25
+        }
+    }
 }
 
 -- LIBRARIES --------------------------------------------------------------------------------------
