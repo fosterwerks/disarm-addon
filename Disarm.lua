@@ -1,5 +1,6 @@
--- Create addon's namespace
-Disarm = {}
+-- DECLARATIONS -----------------------------------------------------------------------------------
+if not Disarm then Disarm = {} end      -- Create namespace if necessary
+
 Disarm.name = "Disarm"
 Disarm.version = 3
 Disarm.Default = {
@@ -7,12 +8,15 @@ Disarm.Default = {
     Indicator.Position.X = 25,
     Indicator.Position.Y = 25
 }
+
 -- INITIALIZATION ---------------------------------------------------------------------------------
 
 function Disarm:Initialize()
     -- Associate our variable with the appropriate 'saved variables' file
     self.savedVariables = ZO_SavedVars:NewAccountWide("DisarmSavedVariables", Disarm.version, nil, Disarm.Default)
 
+    -- Create settings window
+    self.CreateSettingsWindow()
 
     -- Restore indicator's position based on saved data
     self:RestoreIndicatorPosition()
@@ -42,7 +46,7 @@ function Disarm:RestoreIndicatorPosition()
     end
 end
 
--- MAIN FUNCTIONS --------------------------------------------------------------------------------
+-- MAIN FUNCTIONS ---------------------------------------------------------------------------------
 
 function Disarm:SwapWeaponsState()
     if self.unequipped then
@@ -96,8 +100,10 @@ function Disarm:UnequipWeapons()
     end
 
     zo_callLater(function() 
-        DisarmIndicator:SetHidden(false)        -- Makes indicator appear only after last weapon is unequipped
-        self.unequipped = true                  -- Ensures we don't interfere with InvSlotUpdate event handler
+        if Disarm.savedVariables.Indicator.visible then         -- Only show indicator if user has Show Indicator selected in options
+            DisarmIndicator:SetHidden(false)                    -- Makes indicator appear only after last weapon is unequipped
+        end
+        self.unequipped = true                                  -- Ensures we don't interfere with InvSlotUpdate event handler
     end, t)
 end
 
