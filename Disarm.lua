@@ -1,12 +1,18 @@
 -- Create addon's namespace
 Disarm = {}
 Disarm.name = "Disarm"
-
+Disarm.version = 3
+Disarm.Default = {
+    Indicator.visible = true,
+    Indicator.Position.X = 25,
+    Indicator.Position.Y = 25
+}
 -- INITIALIZATION ---------------------------------------------------------------------------------
 
 function Disarm:Initialize()
     -- Associate our variable with the appropriate 'saved variables' file
-    self.savedVariables = ZO_SavedVars:New("DisarmSavedVariables", 1, nil, {})
+    self.savedVariables = ZO_SavedVars:NewAccountWide("DisarmSavedVariables", Disarm.version, nil, Disarm.Default)
+
 
     -- Restore indicator's position based on saved data
     self:RestoreIndicatorPosition()
@@ -26,8 +32,8 @@ end
 
 function Disarm:RestoreIndicatorPosition()
 
-    local left = self.savedVariables.left
-    local top = self.savedVariables.top
+    local left = self.savedVariables.Indicator.Position.X
+    local top = self.savedVariables.Indicator.Position.Y
 
     -- Only try to restore position if position was ever saved
     if (left and top) then
@@ -144,8 +150,8 @@ end
 
 function Disarm.OnIndicatorMoveStop()
     -- Save "No Weapon" indicator position on move
-    Disarm.savedVariables.left = DisarmIndicator:GetLeft()
-    Disarm.savedVariables.top = DisarmIndicator:GetTop()
+    Disarm.savedVariables.Indicator.Position.X = DisarmIndicator:GetLeft()
+    Disarm.savedVariables.Indicator.Position.Y = DisarmIndicator:GetTop()
 end
 
 -- EVENT REGISTRATIONS ----------------------------------------------------------------------------

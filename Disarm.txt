@@ -2,10 +2,10 @@
 ## Description: Have you ever found yourself fishing and realize nobody else brought along their two-handed dragon cleaver with? Easily hide your over-aggressive tendencies from your friends by unequipping your weapons with a simple keybind. Reequip with the same key.
 ## Author: |c428a53Foster|r|c676e38werks|r
 ## APIVersion: 100029 100030
-## AddOnVersion: 2
-## Version: 0.2
+## AddOnVersion: 3
+## Version: 0.3
 ## DependsOn: 
-## OptionalDependsOn: 
+## OptionalDependsOn: LibAddonMenu-2.0
 ## SavedVariables: DisarmSavedVariables
 
 bindings/Bindings.lua
