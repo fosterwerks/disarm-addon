@@ -4,7 +4,7 @@ local LAM2 = LibraryAddonMenu2
 
 -- MENU -------------------------------------------------------------------------------------------
 
-if not Disarm then Disarm = {}          -- Create Namespace if neccessary
+if not Disarm then Disarm = {} end         -- Create Namespace if neccessary
 
 function Disarm.CreateSettingsWindow()
     local panelData = {
