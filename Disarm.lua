@@ -16,7 +16,7 @@ Disarm.Default = {
 
 -- LIBRARIES --------------------------------------------------------------------------------------
 
-local LAM2 = LibraryAddonMenu2
+local LAM2 = LibAddonMenu2
 
 -- INITIALIZATION ---------------------------------------------------------------------------------
 
@@ -58,6 +58,7 @@ end
 -- SETTINGS MENU ----------------------------------------------------------------------------------
 
 function Disarm.CreateSettingsWindow()
+
     local panelData = {
 		type = "panel",
 		name = "Disarm",
