@@ -11,8 +11,6 @@
 bindings/Bindings.lua
 bindings/Bindings.xml
 
-settings/Settings.lua
-
 Disarm.xml
 Disarm.lua
 
