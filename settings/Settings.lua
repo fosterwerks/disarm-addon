@@ -46,4 +46,6 @@ function Disarm.CreateSettingsWindow()
 			text = "Note: Indicator will be dismissed when re-equipping via the addon, as well as when manually re-equipping. It will not, however, appear if you unequip manually."
 		}
     }
+
+    LAM2:RegisterOptionControls("Disarm", optionsData)
 end
