@@ -73,7 +73,7 @@ function Disarm.CreateSettingsWindow()
 		name = "Disarm",
 		displayName = "Disarm",
 		author = "Fosterwerks",
-		version = tostring(Disarm.version),
+		version = tostring(Disarm.version / 10.0),
 		slashCommand = "/disarm",
 		registerForRefresh = true,
 		registerForDefaults = true,
