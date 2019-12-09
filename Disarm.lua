@@ -1,12 +1,40 @@
--- Create addon's namespace
+-- DECLARATIONS -----------------------------------------------------------------------------------
 Disarm = {}
 Disarm.name = "Disarm"
+Disarm.version = 10
+
+Disarm.Default = {
+    indicator = true,
+    offsetX = 25,
+    offsetY = 25
+}
+
+-- LIBRARIES --------------------------------------------------------------------------------------
+
+local LAM2 = LibAddonMenu2
+
+-- OnAddonLoaded ----------------------------------------------------------------------------------
+
+function Disarm.OnAddOnLoaded(event, addonName)
+    -- The event fires each time any addon loads; check to see that it is our addon that's loading
+    if addonName ~= Disarm.name then return end
+
+    -- Unregister 'addon loaded' callback
+    EVENT_MANAGER:UnregisterForEvent(Disarm.name, EVENT_ADD_ON_LOADED)
+
+    -- Associate our variable with the appropriate 'saved variables' file
+    Disarm.savedVariables = ZO_SavedVars:NewAccountWide("DisarmSavedVariables", Disarm.version, nil, Disarm.Default)
+
+    -- Begin initialization
+    Disarm:Initialize()
+end
 
 -- INITIALIZATION ---------------------------------------------------------------------------------
 
 function Disarm:Initialize()
-    -- Associate our variable with the appropriate 'saved variables' file
-    self.savedVariables = ZO_SavedVars:New("DisarmSavedVariables", 1, nil, {})
+
+    -- Create settings window
+    Disarm.CreateSettingsWindow()
 
     -- Restore indicator's position based on saved data
     self:RestoreIndicatorPosition()
@@ -26,8 +54,8 @@ end
 
 function Disarm:RestoreIndicatorPosition()
 
-    local left = self.savedVariables.left
-    local top = self.savedVariables.top
+    local left = self.savedVariables.offsetX
+    local top = self.savedVariables.offsetY
 
     -- Only try to restore position if position was ever saved
     if (left and top) then
@@ -36,7 +64,57 @@ function Disarm:RestoreIndicatorPosition()
     end
 end
 
--- MAIN FUNCTIONS --------------------------------------------------------------------------------
+-- SETTINGS MENU ----------------------------------------------------------------------------------
+
+function Disarm.CreateSettingsWindow()
+
+    local panelData = {
+		type = "panel",
+		name = "Disarm",
+		displayName = "Disarm",
+		author = "Fosterwerks",
+		version = tostring(Disarm.version),
+		slashCommand = "/disarm",
+		registerForRefresh = true,
+		registerForDefaults = true,
+    }
+    
+    local cntrlOptionsPanel = LAM2:RegisterAddonPanel("Disarm_Panel", panelData)
+
+    local optionsData = {
+        [1] = {
+			type = "header",
+			name = "Warning Indicator Settings"
+		},
+
+		[2] = {
+			type = "description",
+			text = "Here you can adjust how the warning indicator works."
+		},
+
+		[3] = {
+			type = "checkbox",
+			name = "Show Warning Indicator on Unequip",
+			tooltip = "Check this box if you want a persistent warning indicator.", -- to display when you've unequipped via the addon.",
+			default = true,
+			getFunc = function() return Disarm.savedVariables.indicator end,
+            setFunc = function(newValue)
+                Disarm.savedVariables.indicator = newValue
+                if newValue == false then DisarmIndicator:SetHidden(true)
+                elseif Disarm.unequipped then DisarmIndicator:SetHidden(false) end
+            end
+        },
+        
+        [4] = {
+            type = "description",
+			text = "Note: Indicator will be dismissed when re-equipping via the addon, as well as when manually re-equipping. It will not, however, appear if you unequip manually."
+		}
+    }
+
+    LAM2:RegisterOptionControls("Disarm_Panel", optionsData)
+end
+
+-- MAIN FUNCTIONS ---------------------------------------------------------------------------------
 
 function Disarm:SwapWeaponsState()
     if self.unequipped then
@@ -90,8 +168,10 @@ function Disarm:UnequipWeapons()
     end
 
     zo_callLater(function() 
-        DisarmIndicator:SetHidden(false)        -- Makes indicator appear only after last weapon is unequipped
-        self.unequipped = true                  -- Ensures we don't interfere with InvSlotUpdate event handler
+        if Disarm.savedVariables.indicator then         -- Only show indicator if user has Show Indicator selected in options
+            DisarmIndicator:SetHidden(false)                    -- Makes indicator appear only after last weapon is unequipped
+        end
+        self.unequipped = true                                  -- Ensures we don't interfere with InvSlotUpdate event handler
     end, t)
 end
 
@@ -116,16 +196,6 @@ end
 
 -- EVENT HANDLER FUNCTIONS ------------------------------------------------------------------------
 
-function Disarm.OnAddOnLoaded(event, addonName)
-    -- The event fires each time any addon loads; check to see that it is our addon that's loading
-    if addonName == Disarm.name then return end
-
-    -- Unregister 'addon loaded' callback
-    EVENT_MANAGER:UnregisterForEvent(Disarm.name, EVENT_ADD_ON_LOADED)
-
-    -- Begin initialization
-    Disarm:Initialize()
-end
 
 function Disarm.OnPlayerCombatState(event, inCombat)
     -- Re-equip weapons if entering combat and unarmed
@@ -144,8 +214,8 @@ end
 
 function Disarm.OnIndicatorMoveStop()
     -- Save "No Weapon" indicator position on move
-    Disarm.savedVariables.left = DisarmIndicator:GetLeft()
-    Disarm.savedVariables.top = DisarmIndicator:GetTop()
+    Disarm.savedVariables.offsetX = DisarmIndicator:GetLeft()
+    Disarm.savedVariables.offsetY = DisarmIndicator:GetTop()
 end
 
 -- EVENT REGISTRATIONS ----------------------------------------------------------------------------
